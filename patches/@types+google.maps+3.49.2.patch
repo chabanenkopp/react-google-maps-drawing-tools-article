@@ -1,0 +1,14 @@
+diff --git a/node_modules/@types/google.maps/index.d.ts b/node_modules/@types/google.maps/index.d.ts
+index cf7e2f7..3636e3e 100755
+--- a/node_modules/@types/google.maps/index.d.ts
++++ b/node_modules/@types/google.maps/index.d.ts
+@@ -3737,6 +3737,9 @@ declare namespace google.maps {
+      * Prevents this event from propagating further.
+      */
+     stop(): void;
++
++    edge?: number
++    vertex?: number
+   }
+ }
+ declare namespace google.maps {

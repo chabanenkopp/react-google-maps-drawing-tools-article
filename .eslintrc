@@ -1,0 +1,64 @@
+{
+    "extends": [
+      "@sudolabs-io/eslint-config-sudolabs/typescript-react",
+      "@sudolabs-io/eslint-config-sudolabs/with/prettier",
+      "@sudolabs-io/eslint-config-sudolabs/with/lodash"
+    ],
+    "rules": {
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "enum",
+          "format": ["PascalCase"]
+        },
+        {
+          "selector": "enumMember",
+          "format": ["PascalCase"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const", "global"],
+          "types": ["boolean", "string", "number"],
+          "format": ["UPPER_CASE"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const", "destructured", "global"],
+          "types": ["boolean", "string", "number"],
+          "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const", "destructured"],
+          "types": ["boolean", "string", "number"],
+          "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const"],
+          "format": ["camelCase"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const"],
+          "types": ["function"],
+          "format": ["PascalCase", "camelCase"]
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["const", "global"],
+          "format": ["PascalCase"]
+        },
+        {
+          "selector": "variable",
+          "types": ["boolean"],
+          "format": ["PascalCase"],
+          "prefix": ["is", "has", "does", "do", "are", "were", "can"]
+        }
+      ],
+      "arrow-body-style": ["error", "as-needed"],
+      "react/jsx-key": ["error"]
+    },
+    "plugins": ["jest"]
+  }
+  
