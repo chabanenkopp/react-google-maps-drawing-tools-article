@@ -12,7 +12,6 @@ import { Map, MapRef } from "./Map";
 
 const MAP_BUTTONS_OFFSET_Y = rem(10);
 
-// Prevents warning on `LoadScript has been reloaded unintentionally`
 const LIBRARIES: Libraries = ["drawing", "geometry"];
 
 const ButtonsContainer = styled("div")`
