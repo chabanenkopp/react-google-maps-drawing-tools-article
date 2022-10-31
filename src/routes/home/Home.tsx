@@ -2,7 +2,7 @@ import React from "react";
 import { Libraries, LoadScript } from "@react-google-maps/api";
 import { rem } from "polished";
 import styled from "styled-components";
-import GenericPage from "components/GenericPage";
+import { GenericPage } from "components/GenericPage";
 import {
   ButtonName,
   DrawingButtonsGroup,

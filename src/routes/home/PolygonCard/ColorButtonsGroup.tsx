@@ -13,6 +13,14 @@ export enum ButtonColor {
   Green = "green",
 }
 
+export const NamesToColors = {
+  [ButtonColor.Blue]: Color.OlympicBlue,
+  [ButtonColor.LightBlue]: Color.PicnicDaySky,
+  [ButtonColor.Pink]: Color.FugitiveFlamingo,
+  [ButtonColor.Red]: Color.GlowingBrakeDisc,
+  [ButtonColor.Green]: Color.PeppermintToad,
+};
+
 type SelectedValue = ButtonColor | null;
 
 interface ButtonProps {
@@ -25,14 +33,6 @@ interface GroupProps extends SpaceProps {
   selectedValue: SelectedValue;
   children: React.ReactElement<ButtonProps>[] | React.ReactElement<ButtonProps>;
 }
-
-export const NamesToColors = {
-  [ButtonColor.Blue]: Color.OlympicBlue,
-  [ButtonColor.LightBlue]: Color.PicnicDaySky,
-  [ButtonColor.Pink]: Color.FugitiveFlamingo,
-  [ButtonColor.Red]: Color.GlowingBrakeDisc,
-  [ButtonColor.Green]: Color.PeppermintToad,
-};
 
 const BUTTON_SIZE = rem(24);
 

@@ -1,11 +1,5 @@
 import { BorderWidth, ButtonColor } from "./PolygonCard";
 
-export enum PolygonCategory {
-  Pin = "Pin",
-  DrawingTool = "DrawingTool",
-  SplittedAddress = "SplittedAddress",
-}
-
 export interface PolygonOptionsType {
   borderWidth: BorderWidth;
   borderColor: ButtonColor;
