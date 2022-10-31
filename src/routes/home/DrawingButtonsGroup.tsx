@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { SpaceProps } from "styled-system";
 import { BoxShadow, Color, Radius } from "Theme";
 import { Box, Flex } from "components/Layout";
-import { MAP_BUTTON_HEIGHT } from "./constants";
 
 export enum ButtonName {
   Line = "line",
@@ -28,6 +27,7 @@ interface GroupProps extends SpaceProps {
   children: React.ReactElement<ButtonProps>[] | React.ReactElement<ButtonProps>;
 }
 
+const BUTTONS_HEIGHT = rem(40);
 const BUTTONS_WIDTH = rem(200);
 
 const getIconCompByName = (name: ButtonName) => {
@@ -46,22 +46,22 @@ const getIconCompByName = (name: ButtonName) => {
 
 const Container = styled(Flex)`
   width: ${BUTTONS_WIDTH};
-  height: ${MAP_BUTTON_HEIGHT}px;
+  height: ${BUTTONS_HEIGHT};
 
   box-shadow: ${BoxShadow.Small};
-  border-radius: ${Radius.MEDIUM};
+  border-radius: ${Radius.Medium};
   background-color: ${Color.White};
 
   div:not(:last-child) {
     border-right: 1px solid ${Color.BlackOak};
   }
   div:first-of-type {
-    border-top-left-radius: ${Radius.MEDIUM};
-    border-bottom-left-radius: ${Radius.MEDIUM};
+    border-top-left-radius: ${Radius.Medium};
+    border-bottom-left-radius: ${Radius.Medium};
   }
   div:last-of-type {
-    border-top-right-radius: ${Radius.MEDIUM};
-    border-bottom-right-radius: ${Radius.MEDIUM};
+    border-top-right-radius: ${Radius.Medium};
+    border-bottom-right-radius: ${Radius.Medium};
   }
 `;
 

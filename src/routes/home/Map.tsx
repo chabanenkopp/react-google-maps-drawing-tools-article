@@ -202,7 +202,7 @@ export const Map = forwardRef<MapRef, MapProps>(
       setPolygons(updatedPolygons);
     };
 
-    const calculatePolygonCardLatLng = (polygon: MT.PolygonType) => {
+    const handleSetPolygonCardLatLng = (polygon: MT.PolygonType) => {
       const bounds = new window.google.maps.LatLngBounds();
 
       polygon.coordinates.forEach(({ lat, lng }) =>
@@ -368,7 +368,7 @@ export const Map = forwardRef<MapRef, MapProps>(
                     ];
                   });
 
-                  calculatePolygonCardLatLng(polygon);
+                  handleSetPolygonCardLatLng(polygon);
                 }}
                 onMouseUp={(event) => {
                   const { polygonInstance } = polygon;
@@ -441,7 +441,7 @@ export const Map = forwardRef<MapRef, MapProps>(
                       !vertexWithChangedCoordinates &&
                       !isClickOutsideDisabled
                     ) {
-                      calculatePolygonCardLatLng(polygon);
+                      handleSetPolygonCardLatLng(polygon);
                     }
                   }
                 }}
@@ -473,7 +473,7 @@ export const Map = forwardRef<MapRef, MapProps>(
                         prevCoordinates: [],
                       };
 
-                      calculatePolygonCardLatLng(draggedPolygon);
+                      handleSetPolygonCardLatLng(draggedPolygon);
 
                       return R.append(draggedPolygon, polygonsWithoutCurrent);
                     });

@@ -20,6 +20,7 @@ export const getLineTrajectory = (coordinates: google.maps.LatLngLiteral[]) =>
 
         return allFragmentsDistance + fragmentDistance;
       }
+
       return allFragmentsDistance;
     },
     DEFAULT_DISTANCE

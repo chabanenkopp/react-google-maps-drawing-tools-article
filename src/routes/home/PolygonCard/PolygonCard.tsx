@@ -6,7 +6,6 @@ import { Color, CustomSpace, FontSize, FontWeight, Radius, Space } from "Theme";
 import { Box, Flex } from "components/Layout";
 import { Text } from "components/Typography";
 import { CardDivider } from "../CardDivider";
-import { POLYGON_CARD_HEIGHT, POLYGON_CARD_WIDTH } from "../constants";
 import { BorderButtonsGroup, BorderWidth } from "./BorderButtonsGroup";
 import { ButtonColor, ColorButtonsGroup } from "./ColorButtonsGroup";
 
@@ -21,6 +20,7 @@ type Props = {
   onChangeBackgroundColor: (value: ButtonColor) => void;
 };
 
+export const POLYGON_CARD_SIZE = 320;
 const LEFT_OFFSET = Space.M;
 
 const Title = styled("p")`
@@ -41,9 +41,9 @@ export function PolygonCard({
 }: Props) {
   return (
     <Box
-      width={rem(POLYGON_CARD_WIDTH)}
-      height={rem(POLYGON_CARD_HEIGHT)}
-      borderRadius={Radius.LARGE}
+      width={rem(POLYGON_CARD_SIZE)}
+      height={rem(POLYGON_CARD_SIZE)}
+      borderRadius={Radius.Large}
       bg={Color.White}
       p={CustomSpace[12]}
     >

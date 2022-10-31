@@ -1,4 +1,4 @@
-interface VertexWithChangedCoordinates {
+interface VertexWithChangedCoordinatesProps {
   prevCoordinates: google.maps.LatLngLiteral[];
   currentCoordinates: google.maps.LatLngLiteral[];
 }
@@ -6,7 +6,7 @@ interface VertexWithChangedCoordinates {
 const getVertexWithChangedCoordinates = ({
   prevCoordinates,
   currentCoordinates,
-}: VertexWithChangedCoordinates) =>
+}: VertexWithChangedCoordinatesProps) =>
   currentCoordinates.find(
     ({ lat: prevLat, lng: prevLng }) =>
       !prevCoordinates.some(
@@ -15,7 +15,7 @@ const getVertexWithChangedCoordinates = ({
       )
   );
 
-interface Props {
+interface processOnVertexOrEdgeClickProps {
   event: google.maps.MapMouseEvent;
   prevCoordinates: google.maps.LatLngLiteral[];
   currentCoordinates: google.maps.LatLngLiteral[];
@@ -25,7 +25,7 @@ export const processOnVertexOrEdgeClick = ({
   event,
   prevCoordinates,
   currentCoordinates,
-}: Props) => {
+}: processOnVertexOrEdgeClickProps) => {
   const isClickedOnEdgeOrVertex =
     event.edge !== undefined || event.vertex !== undefined;
 

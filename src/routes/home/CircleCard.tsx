@@ -19,7 +19,7 @@ export function CircleCard({ onDelete, radius }: Props) {
     <Box
       width={rem(CIRCLE_CARD_WIDTH)}
       height={CARD_HEIGHT}
-      borderRadius={Radius.LARGE}
+      borderRadius={Radius.Large}
       bg={Color.White}
       p={CustomSpace[12]}
     >

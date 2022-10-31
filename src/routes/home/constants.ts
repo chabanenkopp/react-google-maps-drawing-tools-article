@@ -1,18 +1,12 @@
 import { Color } from "Theme";
 import { CIRCLE_CARD_WIDTH } from "./CircleCard";
+import { POLYGON_CARD_SIZE } from "./PolygonCard";
+import {
+  LINE_DISTANCE_CARD_WIDTH,
+  LineDistanceCardHeight,
+} from "./PolylineDistanceCard";
 
-export const LineDistanceCardHeight = {
-  SMALL: 90,
-  MEDIUM: 220,
-};
-
-export const MAP_BUTTON_HEIGHT = 40;
-export const POLYGON_CARD_WIDTH = 320;
-export const POLYGON_CARD_HEIGHT = 320;
-export const LINE_DISTANCE_CARD_WIDTH = 280;
-export const DEFAULT_MAP_ID = "17afae0de3565f";
-
-const NATIVE_TRIANGLE_SIZE = 11;
+const NATIVE_TRIANGLE_SIZE = 12;
 const CIRCLE_CARD_RIGHT_OFFSET = 26;
 const POLYGON_CARD_RIGHT_OFFSET = 20;
 const LINE_DISTANCE_CARD_RIGHT_OFFSET = 26;
@@ -29,10 +23,6 @@ const MapConfigOptions: google.maps.MapOptions = {
   disableDefaultUI: true,
   fullscreenControl: false,
   streetViewControl: false,
-  streetViewControlOptions: {
-    position: 5.0,
-  },
-  mapId: DEFAULT_MAP_ID,
   gestureHandling: "greedy",
 };
 
@@ -81,8 +71,8 @@ export const MapSettings = {
     Polygon: {
       UndoPixelOffset: { X: 0, Y: -5 },
       CardPixelOffset: {
-        X: POLYGON_CARD_WIDTH / 2 + POLYGON_CARD_RIGHT_OFFSET,
-        Y: POLYGON_CARD_HEIGHT / 2 + NATIVE_TRIANGLE_SIZE,
+        X: POLYGON_CARD_SIZE / 2 + POLYGON_CARD_RIGHT_OFFSET,
+        Y: (POLYGON_CARD_SIZE + NATIVE_TRIANGLE_SIZE) / 2,
       },
     },
     Circle: {
@@ -96,8 +86,8 @@ export const MapSettings = {
         X: LINE_DISTANCE_CARD_RIGHT_OFFSET + LINE_DISTANCE_CARD_WIDTH / 2,
         Y: (isTrajectory: boolean) =>
           isTrajectory
-            ? LineDistanceCardHeight.MEDIUM
-            : LineDistanceCardHeight.SMALL,
+            ? LineDistanceCardHeight.Medium
+            : LineDistanceCardHeight.Small,
       },
     },
   },

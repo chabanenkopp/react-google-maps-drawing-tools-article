@@ -18,7 +18,7 @@ export function UndoButton({ onClick }: Props) {
       justifyContent="center"
       width={BUTTON_SIZE}
       height={BUTTON_SIZE}
-      borderRadius={Radius.MEDIUM}
+      borderRadius={Radius.Medium}
       bg={Color.White}
     >
       <UndoIcon cursor="pointer" />

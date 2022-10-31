@@ -45,7 +45,7 @@ function ColorButton({ onClick, selectedValue, color }: ButtonProps) {
       justifyContent="center"
       width={BUTTON_SIZE}
       height={BUTTON_SIZE}
-      borderRadius={Radius.CIRCLE}
+      borderRadius={Radius.Circle}
       bg={NamesToColors[color]}
       border={
         selectedValue === color ? `3px solid ${Color.BlackOak}` : undefined

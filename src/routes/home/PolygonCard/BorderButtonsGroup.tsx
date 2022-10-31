@@ -36,7 +36,7 @@ function ColorButton({ onClick, selectedValue, borderWidth }: ButtonProps) {
       justifyContent="center"
       width={BUTTON_SIZE}
       height={BUTTON_SIZE}
-      borderRadius={Radius.CIRCLE}
+      borderRadius={Radius.Circle}
       border={`1px solid ${Color.BleachedSilk}`}
       bg={selectedValue === borderWidth ? Color.BleachedSilk : Color.White}
     >

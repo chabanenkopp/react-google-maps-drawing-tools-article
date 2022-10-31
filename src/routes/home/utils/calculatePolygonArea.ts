@@ -20,7 +20,7 @@ export const calculatePolygonArea = ({
     const isValueDisplayedInSquareMeters =
       squareMeters <= maxValueInSquareMeters;
 
-    const area = Number.parseFloat(
+    const area = parseFloat(
       (isValueDisplayedInSquareMeters
         ? squareMeters
         : squareMeters * squareMetersToSquareKilometersRatio
@@ -30,5 +30,5 @@ export const calculatePolygonArea = ({
     return isValueDisplayedInSquareMeters ? `${area} m²` : `${area} km²`;
   }
 
-  return `${fallBackValue} m`;
+  return `${fallBackValue} m²`;
 };

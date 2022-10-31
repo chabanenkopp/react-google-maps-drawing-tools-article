@@ -22,7 +22,7 @@ export const Button = styled("button")<SpaceProps>`
   text-decoration: none;
 
   color: ${Color.White};
-  border-radius: ${Radius.MEDIUM};
+  border-radius: ${Radius.Medium};
   background-color: ${Color.GreekFlagBlue};
 
   padding: ${Space.XS} ${Space.M};

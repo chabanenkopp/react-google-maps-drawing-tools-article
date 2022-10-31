@@ -6,7 +6,6 @@ import { Color, CustomSpace, FontSize, FontWeight, Radius, Space } from "Theme";
 import { Box, Button, Flex } from "components";
 import { Text } from "components/Typography";
 import { CardDivider } from "./CardDivider";
-import { LINE_DISTANCE_CARD_WIDTH, LineDistanceCardHeight } from "./constants";
 
 type Props = {
   isMultiline: boolean;
@@ -14,6 +13,12 @@ type Props = {
   trajectory?: number | string | null;
   onDelete: () => void;
   onRemoveNodes: () => void;
+};
+
+export const LINE_DISTANCE_CARD_WIDTH = 280;
+export const LineDistanceCardHeight = {
+  Small: 90,
+  Medium: 220,
 };
 
 const Title = styled("p")`
@@ -35,11 +40,11 @@ export function PolylineDistanceCard({
       width={rem(LINE_DISTANCE_CARD_WIDTH)}
       height={rem(
         isMultiline
-          ? LineDistanceCardHeight.MEDIUM
-          : LineDistanceCardHeight.SMALL
+          ? LineDistanceCardHeight.Medium
+          : LineDistanceCardHeight.Small
       )}
       bg={Color.White}
-      borderRadius={Radius.LARGE}
+      borderRadius={Radius.Large}
       p={CustomSpace[12]}
     >
       <Flex alignItems="center" justifyContent="space-between">

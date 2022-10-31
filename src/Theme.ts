@@ -5,23 +5,22 @@ import {
   FlattenSimpleInterpolation,
 } from "styled-components";
 
-export const MAX_CONTENT_WIDTH = rem("1440px");
 export const FONT_STACK = `Poppins, Telegraf, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`;
 
 export const Color = {
   White: "#FFFFFF",
   Black: "#000",
-  QuietBay: "#5E96CD", // primary 400
-  GreekFlagBlue: "#005CA9", // primary 500
-  OlympicBlue: "#003579", // primary 700
-  Optophobia: "#160B0E", // Gray 900
-  PicnicDaySky: "#0BC5EA", // cyan 400
-  FugitiveFlamingo: "#ED64A6", // pink 400
-  GlowingBrakeDisc: "#E53E3E", // red 500
-  PeppermintToad: "#009E3D", // success 500
-  LemonDream: "#ECA400", // warning 500
-  BleachedSilk: "#F2F2F2", // gray 100
-  BlackOak: "#4E4E4E", // gray 500
+  QuietBay: "#5E96CD",
+  GreekFlagBlue: "#005CA9",
+  OlympicBlue: "#003579",
+  Optophobia: "#160B0E",
+  PicnicDaySky: "#0BC5EA",
+  FugitiveFlamingo: "#ED64A6",
+  GlowingBrakeDisc: "#E53E3E",
+  PeppermintToad: "#009E3D",
+  LemonDream: "#ECA400",
+  BleachedSilk: "#F2F2F2",
+  BlackOak: "#4E4E4E",
 };
 
 export const Space = {
@@ -74,12 +73,12 @@ export const FontWeight = {
 };
 
 export const Radius = {
-  EXTRA_SMALL: "2px",
-  SMALL: "4px",
-  MEDIUM: "6px",
-  LARGE: "8px",
-  CIRCLE: "50%",
-  PILL: "9999px",
+  ExtraSmall: "2px",
+  Small: "4px",
+  Medium: "6px",
+  Large: "8px",
+  Circle: "50%",
+  Pill: "9999px",
 };
 
 export const BoxShadow = {
