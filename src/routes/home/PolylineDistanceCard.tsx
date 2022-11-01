@@ -2,7 +2,7 @@ import React from "react";
 import TrashIcon from "images/svg/trash.inline.svg";
 import { rem } from "polished";
 import styled from "styled-components";
-import { Color, CustomSpace, FontSize, FontWeight, Radius, Space } from "Theme";
+import { Color, CustomSpace, FontSize, FontWeight, Space } from "Theme";
 import { Box, Button, Flex } from "components";
 import { Text } from "components/Typography";
 import { CardDivider } from "./CardDivider";
@@ -44,7 +44,6 @@ export function PolylineDistanceCard({
           : LineDistanceCardHeight.Small
       )}
       bg={Color.White}
-      borderRadius={Radius.Large}
       p={CustomSpace[12]}
     >
       <Flex alignItems="center" justifyContent="space-between">

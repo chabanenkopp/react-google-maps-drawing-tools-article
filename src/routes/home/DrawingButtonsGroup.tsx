@@ -5,7 +5,7 @@ import PolygonIcon from "images/svg/polygon.inline.svg";
 import { rem } from "polished";
 import styled from "styled-components";
 import { SpaceProps } from "styled-system";
-import { BoxShadow, Color, Radius } from "Theme";
+import { BoxShadow, Color } from "Theme";
 import { Box, Flex } from "components/Layout";
 
 export enum ButtonName {
@@ -49,19 +49,10 @@ const Container = styled(Flex)`
   height: ${BUTTONS_HEIGHT};
 
   box-shadow: ${BoxShadow.Small};
-  border-radius: ${Radius.Medium};
   background-color: ${Color.White};
 
   div:not(:last-child) {
     border-right: 1px solid ${Color.BlackOak};
-  }
-  div:first-of-type {
-    border-top-left-radius: ${Radius.Medium};
-    border-bottom-left-radius: ${Radius.Medium};
-  }
-  div:last-of-type {
-    border-top-right-radius: ${Radius.Medium};
-    border-bottom-right-radius: ${Radius.Medium};
   }
 `;
 

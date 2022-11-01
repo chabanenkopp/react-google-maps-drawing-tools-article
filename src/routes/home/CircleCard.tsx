@@ -1,7 +1,7 @@
 import React from "react";
 import TrashIcon from "images/svg/trash.inline.svg";
 import { rem } from "polished";
-import { Color, CustomSpace, FontSize, FontWeight, Radius, Space } from "Theme";
+import { Color, CustomSpace, FontSize, FontWeight, Space } from "Theme";
 import { Box, Flex } from "components/Layout";
 import { Text } from "components/Typography";
 import { getDistanceWithUnits } from "./utils/getDistanceWithUnits";
@@ -19,7 +19,6 @@ export function CircleCard({ onDelete, radius }: Props) {
     <Box
       width={rem(CIRCLE_CARD_WIDTH)}
       height={CARD_HEIGHT}
-      borderRadius={Radius.Large}
       bg={Color.White}
       p={CustomSpace[12]}
     >

@@ -48,6 +48,7 @@ interface MapProps extends GoogleMapProps {
   resetDrawingButtons?: () => void;
 }
 
+const POLYGON_NODES_MIN_QUANTITY = 4;
 const POLYLINE_NODES_MIN_QUANTITY = 2;
 
 export const DefaultPolygonOptions = {
@@ -286,6 +287,10 @@ export const Map = forwardRef<MapRef, MapProps>(
                   const coordinates =
                     coordinateFuncsToCoordinates(coordinateFuncs);
 
+                  if (coordinates.length < POLYGON_NODES_MIN_QUANTITY) {
+                    return;
+                  }
+
                   setPolygons((prevPolygons) => [
                     ...prevPolygons,
                     {
@@ -332,6 +337,10 @@ export const Map = forwardRef<MapRef, MapProps>(
 
                   const coordinates =
                     coordinateFuncsToCoordinates(coordinateFuncs);
+
+                  if (coordinates.length < POLYLINE_NODES_MIN_QUANTITY) {
+                    return;
+                  }
 
                   setDistancePolylines((prevPolylines) => [
                     ...prevPolylines,

@@ -2,7 +2,7 @@ import React from "react";
 import TrashIcon from "images/svg/trash.inline.svg";
 import { rem } from "polished";
 import styled from "styled-components";
-import { Color, CustomSpace, FontSize, FontWeight, Radius, Space } from "Theme";
+import { Color, CustomSpace, FontSize, FontWeight, Space } from "Theme";
 import { Box, Flex } from "components/Layout";
 import { Text } from "components/Typography";
 import { CardDivider } from "../CardDivider";
@@ -43,7 +43,6 @@ export function PolygonCard({
     <Box
       width={rem(POLYGON_CARD_SIZE)}
       height={rem(POLYGON_CARD_SIZE)}
-      borderRadius={Radius.Large}
       bg={Color.White}
       p={CustomSpace[12]}
     >

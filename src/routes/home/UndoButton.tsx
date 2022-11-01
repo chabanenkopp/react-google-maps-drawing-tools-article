@@ -1,7 +1,7 @@
 import React from "react";
 import UndoIcon from "images/svg/undo.inline.svg";
 import { rem } from "polished";
-import { Color, Radius } from "Theme";
+import { Color } from "Theme";
 import { Flex } from "components/Layout";
 
 type Props = {
@@ -18,7 +18,6 @@ export function UndoButton({ onClick }: Props) {
       justifyContent="center"
       width={BUTTON_SIZE}
       height={BUTTON_SIZE}
-      borderRadius={Radius.Medium}
       bg={Color.White}
     >
       <UndoIcon cursor="pointer" />

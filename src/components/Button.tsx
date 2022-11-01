@@ -1,7 +1,7 @@
 import { rem } from "polished";
 import styled from "styled-components";
 import { space, SpaceProps } from "styled-system";
-import { Color, FontSize, FontWeight, Radius, Space } from "Theme";
+import { Color, FontSize, FontWeight, Space } from "Theme";
 
 const BUTTON_HEIGHT = rem(40);
 
@@ -22,7 +22,6 @@ export const Button = styled("button")<SpaceProps>`
   text-decoration: none;
 
   color: ${Color.White};
-  border-radius: ${Radius.Medium};
   background-color: ${Color.GreekFlagBlue};
 
   padding: ${Space.XS} ${Space.M};
