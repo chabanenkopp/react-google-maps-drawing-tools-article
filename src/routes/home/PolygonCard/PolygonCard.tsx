@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { Color, CustomSpace, FontSize, FontWeight, Space } from "Theme";
 import { Box, Flex } from "components/Layout";
 import { Text } from "components/Typography";
-import { CardDivider } from "../CardDivider";
 import { BorderButtonsGroup, BorderWidth } from "./BorderButtonsGroup";
 import { ButtonColor, ColorButtonsGroup } from "./ColorButtonsGroup";
 
@@ -20,10 +19,10 @@ type Props = {
   onChangeBackgroundColor: (value: ButtonColor) => void;
 };
 
-export const POLYGON_CARD_SIZE = 320;
+export const POLYGON_CARD_SIZE = 300;
 const LEFT_OFFSET = Space.M;
 
-const Title = styled("p")`
+const Title = styled(Text).attrs({ as: "p" })`
   font-size: ${FontSize.L};
   font-weight: ${FontWeight.Normal};
   margin: ${CustomSpace[12]} 0 ${CustomSpace[12]} ${LEFT_OFFSET};
@@ -60,8 +59,6 @@ export function PolygonCard({
         {area}
       </Text>
 
-      <CardDivider mt={Space.S} />
-
       <Title>Border Color</Title>
 
       <ColorButtonsGroup selectedValue={selectedBorderColor} ml={LEFT_OFFSET}>
@@ -80,8 +77,6 @@ export function PolygonCard({
         ))}
       </ColorButtonsGroup>
 
-      <CardDivider mt={CustomSpace[12]} />
-
       <Title>Border width</Title>
 
       <BorderButtonsGroup selectedValue={selectedBorderWidth} ml={LEFT_OFFSET}>
@@ -99,8 +94,6 @@ export function PolygonCard({
           />
         ))}
       </BorderButtonsGroup>
-
-      <CardDivider mt={CustomSpace[12]} />
 
       <Title>Background color</Title>
 

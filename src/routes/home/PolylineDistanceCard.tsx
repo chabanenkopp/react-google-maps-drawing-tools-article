@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { Color, CustomSpace, FontSize, FontWeight, Space } from "Theme";
 import { Box, Button, Flex } from "components";
 import { Text } from "components/Typography";
-import { CardDivider } from "./CardDivider";
 
 type Props = {
   isMultiline: boolean;
@@ -18,7 +17,7 @@ type Props = {
 export const LINE_DISTANCE_CARD_WIDTH = 280;
 export const LineDistanceCardHeight = {
   Small: 90,
-  Medium: 220,
+  Medium: 212,
 };
 
 const Title = styled("p")`
@@ -62,8 +61,6 @@ export function PolylineDistanceCard({
 
       {trajectory && (
         <>
-          <CardDivider mt={Space.S} />
-
           <Title>Trajectory</Title>
 
           <Text
