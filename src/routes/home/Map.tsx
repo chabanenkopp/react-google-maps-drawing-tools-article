@@ -48,7 +48,7 @@ interface MapProps extends GoogleMapProps {
   resetDrawingButtons?: () => void;
 }
 
-const POLYGON_NODES_MIN_QUANTITY = 4;
+const POLYGON_NODES_MIN_QUANTITY = 3;
 const POLYLINE_NODES_MIN_QUANTITY = 2;
 
 export const DefaultPolygonOptions = {
