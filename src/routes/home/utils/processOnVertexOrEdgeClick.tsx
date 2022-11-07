@@ -29,15 +29,12 @@ export const processOnVertexOrEdgeClick = ({
   const isClickedOnEdgeOrVertex =
     event.edge !== undefined || event.vertex !== undefined;
 
-  /**
-   * `Polygon` doesn't have `onVertexClick` or `onEdgeClick` events. We need to differentiate between clicks
-   * performed on Polygon, vertices and edges. We compare `currentCoordinates` and `prevCoordinates` to find
-   * a changed vertex.
-   */
-  const vertexWithChangedCoordinates = getVertexWithChangedCoordinates({
-    prevCoordinates,
-    currentCoordinates,
-  });
+  const vertexWithChangedCoordinates = isClickedOnEdgeOrVertex
+    ? getVertexWithChangedCoordinates({
+        prevCoordinates,
+        currentCoordinates,
+      })
+    : undefined;
 
   return { isClickedOnEdgeOrVertex, vertexWithChangedCoordinates };
 };

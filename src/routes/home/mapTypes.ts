@@ -8,7 +8,6 @@ export interface PolygonOptionsType {
 
 export interface ChangePolygonOptions {
   id: number;
-  addressRowId?: string;
   options: google.maps.PolygonOptions;
   polygonOption: { [key: string]: BorderWidth | ButtonColor };
 }
@@ -44,19 +43,4 @@ export interface PolygonCardType {
   id: number;
   lat: number;
   lng: number;
-}
-
-export interface CircleCardType {
-  id: number;
-  radius: number;
-  center: google.maps.LatLng;
-}
-
-export interface LineDistanceCardType {
-  id: number;
-  lat: number;
-  lng: number;
-  distance: number;
-  trajectory: number | null;
-  isMultiLine: boolean;
 }

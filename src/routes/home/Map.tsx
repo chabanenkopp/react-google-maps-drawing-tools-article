@@ -13,7 +13,6 @@ import * as R from "ramda";
 import styled from "styled-components";
 import { BoxShadow } from "Theme";
 import { Box } from "components/Layout";
-import { CircleCard } from "./CircleCard";
 import { MapSettings } from "./constants";
 import * as MT from "./mapTypes";
 import {
@@ -22,18 +21,12 @@ import {
   NamesToColors,
   PolygonCard,
 } from "./PolygonCard";
-import { PolylineDistanceCard } from "./PolylineDistanceCard";
 import { UndoButton } from "./UndoButton";
 import {
   calculatePolygonArea,
   coordinateFuncsToCoordinates,
   dropAndReturnElementById,
   dropAndReturnLastElement,
-  getCircleCardCoordinates,
-  getDistanceWithUnits,
-  getLineDistance,
-  getLineExtremeCoordinates,
-  getLineTrajectory,
   getPolygonOptionByName,
   processOnVertexOrEdgeClick,
 } from "./utils";
@@ -110,10 +103,6 @@ export const Map = forwardRef<MapRef, MapProps>(
     );
     const [polygonCardData, setPolygonCardData] =
       React.useState<MT.PolygonCardType | null>(null);
-    const [circleCardData, setCircleCardData] =
-      React.useState<MT.CircleCardType | null>(null);
-    const [lineDistanceCardData, setLineDistanceCardData] =
-      React.useState<MT.LineDistanceCardType | null>(null);
     const [isClickOutsideDisabled, setIsClickOutsideDisabled] =
       React.useState(false);
 
@@ -144,36 +133,6 @@ export const Map = forwardRef<MapRef, MapProps>(
         }
       },
     }));
-
-    const handleSetCircleDataOnCoordinatesChange = (circle: MT.CircleType) => {
-      const { circleInstance } = circle;
-      const radius = circleInstance?.getRadius();
-      const center = circleInstance?.getCenter();
-
-      if (circleInstance && radius && center) {
-        setCircles((prevCircles) => {
-          const [circlesWithoutCurrent] = dropAndReturnElementById({
-            id: circle.id,
-            elements: prevCircles,
-          });
-
-          return R.append(
-            {
-              ...circle,
-              radius,
-              center,
-            },
-            circlesWithoutCurrent
-          );
-        });
-
-        setCircleCardData({
-          radius,
-          center,
-          id: circle.id,
-        });
-      }
-    };
 
     const handleChangePolygonOptions = ({
       id,
@@ -220,29 +179,52 @@ export const Map = forwardRef<MapRef, MapProps>(
       });
     };
 
-    const handleSetLineDistanceCardData = ({
+    const handleSetCircleDataOnCoordinatesChange = (circle: MT.CircleType) => {
+      const { circleInstance } = circle;
+      const radius = circleInstance?.getRadius();
+      const center = circleInstance?.getCenter();
+
+      if (circleInstance && radius && center) {
+        setCircles((prevCircles) => {
+          const [circlesWithoutCurrent] = dropAndReturnElementById({
+            id: circle.id,
+            elements: prevCircles,
+          });
+
+          return R.append(
+            {
+              ...circle,
+              radius,
+              center,
+            },
+            circlesWithoutCurrent
+          );
+        });
+      }
+    };
+
+    const handleChangePolylineCoordinates = ({
       id,
       coordinates,
     }: {
       id: number;
       coordinates: google.maps.LatLngLiteral[];
     }) => {
-      const { origin, destination } = getLineExtremeCoordinates(coordinates);
-      const isMultiLine = coordinates.length > POLYLINE_NODES_MIN_QUANTITY;
+      setDistancePolylines((prevPolylines) => {
+        const [polylinesWithoutCurrent, currentPolyline] =
+          dropAndReturnElementById({
+            id,
+            elements: prevPolylines,
+          });
 
-      if (destination) {
-        setLineDistanceCardData({
-          id,
-          isMultiLine,
-          lat: destination.lat,
-          lng: destination.lng,
-          distance: getLineDistance({
-            from: origin,
-            to: destination,
-          }),
-          trajectory: isMultiLine ? getLineTrajectory(coordinates) : null,
-        });
-      }
+        return R.append(
+          {
+            ...currentPolyline,
+            coordinates,
+          },
+          polylinesWithoutCurrent
+        );
+      });
     };
 
     return (
@@ -357,116 +339,57 @@ export const Map = forwardRef<MapRef, MapProps>(
             }}
           />
 
-          {polygons &&
-            polygons.map((polygon) => (
-              <Polygon
-                key={polygon.id}
-                editable
-                draggable
-                paths={polygon.coordinates}
-                onLoad={(polygonInstance) => {
-                  polygonInstance.setOptions(PolygonOptions);
+          {polygons.map((polygon) => (
+            <Polygon
+              key={polygon.id}
+              editable
+              draggable
+              paths={polygon.coordinates}
+              onLoad={(polygonInstance) => {
+                polygonInstance.setOptions(PolygonOptions);
 
-                  setPolygons((prevPolygons) => {
-                    const [polygonsWithoutLast, lastPolygon] =
-                      dropAndReturnLastElement(prevPolygons);
+                setPolygons((prevPolygons) => {
+                  const [polygonsWithoutLast, lastPolygon] =
+                    dropAndReturnLastElement(prevPolygons);
 
-                    return [
-                      ...polygonsWithoutLast,
-                      { ...lastPolygon, polygonInstance },
-                    ];
+                  return [
+                    ...polygonsWithoutLast,
+                    { ...lastPolygon, polygonInstance },
+                  ];
+                });
+
+                handleSetPolygonCardLatLng(polygon);
+              }}
+              onMouseUp={(event) => {
+                const { polygonInstance } = polygon;
+
+                if (polygonInstance) {
+                  const coordinateFuncs: google.maps.LatLng[] = polygonInstance
+                    .getPath()
+                    .getArray();
+
+                  const currentCoordinates =
+                    coordinateFuncsToCoordinates(coordinateFuncs);
+
+                  const {
+                    isClickedOnEdgeOrVertex,
+                    vertexWithChangedCoordinates,
+                  } = processOnVertexOrEdgeClick({
+                    event,
+                    currentCoordinates,
+                    prevCoordinates: polygon.coordinates,
                   });
 
-                  handleSetPolygonCardLatLng(polygon);
-                }}
-                onMouseUp={(event) => {
-                  const { polygonInstance } = polygon;
-
-                  if (polygonInstance) {
-                    const coordinateFuncs: google.maps.LatLng[] =
-                      polygonInstance.getPath().getArray();
-
-                    const currentCoordinates =
-                      coordinateFuncsToCoordinates(coordinateFuncs);
-
-                    const {
-                      isClickedOnEdgeOrVertex,
-                      vertexWithChangedCoordinates,
-                    } = processOnVertexOrEdgeClick({
-                      event,
-                      currentCoordinates,
-                      prevCoordinates: polygon.coordinates,
-                    });
-
-                    if (isClickedOnEdgeOrVertex) {
-                      if (polygonCardData) {
-                        setPolygonCardData(null);
-                      }
-
-                      setPolygons((prevPolygons) => {
-                        const [polygonsWithoutCurrent] =
-                          dropAndReturnElementById({
-                            id: polygon.id,
-                            elements: prevPolygons,
-                          });
-
-                        /**
-                         * `event` returns `latLng` of the changed vertex if one of the vertices was dragged. But if polygon
-                         * transformation was performed by dragging one of the edges and thus the total quantity of vertices was increased
-                         * by 1, `event` returns `latLng` of one of the newly created edges, not the `latLng` of the vertex
-                         * that was represented by the edge before dragging. Since we want to display `undo button` above the vertex, not an edge,
-                         * the latLng of the newly created vertex can be found in `vertexWithChangedCoordinates`.
-                         */
-                        if (vertexWithChangedCoordinates) {
-                          setUndoData({
-                            id: polygon.id,
-                            lat: vertexWithChangedCoordinates.lat,
-                            lng: vertexWithChangedCoordinates.lng,
-                          });
-
-                          /**
-                           * Setting prevCoordinates to current and current - to newly obtained coordinates
-                           * retrieved after dragging either a vertex or an edge of the polygon
-                           */
-                          return R.append(
-                            {
-                              ...polygon,
-                              coordinates: currentCoordinates,
-                              prevCoordinates: polygon.coordinates,
-                            },
-                            polygonsWithoutCurrent
-                          );
-                        }
-
-                        return prevPolygons;
-                      });
-                    } else if (
-                      !polygonCardData &&
-                      /**
-                       * `vertexWithChangedCoordinates` is chceked because both `onDragEnd` and `onMouseUp` are triggered
-                       * each time user clicks or drags the shape, meaning card data is set twice on `dragEnd`, but we need
-                       * to set it only once in order to prevent `InfoWindow` from flickering that is seen with async calls
-                       */
-                      !vertexWithChangedCoordinates &&
-                      !isClickOutsideDisabled
-                    ) {
-                      handleSetPolygonCardLatLng(polygon);
+                  if (isClickedOnEdgeOrVertex && vertexWithChangedCoordinates) {
+                    if (polygonCardData) {
+                      setPolygonCardData(null);
                     }
-                  }
-                }}
-                onDragStart={() => {
-                  setUndoData(null);
-                  setPolygonCardData(null);
-                }}
-                onDragEnd={() => {
-                  const { polygonInstance } = polygon;
 
-                  if (polygonInstance) {
-                    const coordinateFuncs: google.maps.LatLng[] =
-                      polygonInstance.getPath().getArray();
-
-                    const coordinates =
-                      coordinateFuncsToCoordinates(coordinateFuncs);
+                    setUndoData({
+                      id: polygon.id,
+                      lat: vertexWithChangedCoordinates.lat,
+                      lng: vertexWithChangedCoordinates.lng,
+                    });
 
                     setPolygons((prevPolygons) => {
                       const [polygonsWithoutCurrent] = dropAndReturnElementById(
@@ -476,183 +399,154 @@ export const Map = forwardRef<MapRef, MapProps>(
                         }
                       );
 
-                      const draggedPolygon = {
-                        ...polygon,
-                        coordinates,
-                        prevCoordinates: [],
-                      };
-
-                      handleSetPolygonCardLatLng(draggedPolygon);
-
-                      return R.append(draggedPolygon, polygonsWithoutCurrent);
-                    });
-                  }
-                }}
-              />
-            ))}
-
-          {circles &&
-            circles.map((circle) => (
-              <Circle
-                editable
-                key={circle.id}
-                center={circle.center}
-                radius={circle.radius}
-                onLoad={(circleInstance) => {
-                  circleInstance.setOptions(CircleOptions);
-
-                  setCircles((prevCircles) => {
-                    const [circlesWithoutLast, lastCircle] =
-                      dropAndReturnLastElement(prevCircles);
-
-                    return [
-                      ...circlesWithoutLast,
-                      { ...lastCircle, circleInstance },
-                    ];
-                  });
-
-                  setCircleCardData({
-                    id: circle.id,
-                    radius: circle.radius,
-                    center: circle.center,
-                  });
-                }}
-                onRadiusChanged={() => {
-                  handleSetCircleDataOnCoordinatesChange(circle);
-                }}
-                onCenterChanged={() => {
-                  handleSetCircleDataOnCoordinatesChange(circle);
-                }}
-                onClick={() => {
-                  if (!circleCardData) {
-                    setCircleCardData({
-                      id: circle.id,
-                      center: circle.center,
-                      radius: circle.radius,
-                    });
-                  }
-                }}
-              />
-            ))}
-
-          {distancePolylines &&
-            distancePolylines.map((polyline) => (
-              <Polyline
-                editable
-                draggable
-                key={polyline.id}
-                path={polyline.coordinates}
-                onLoad={(polylineInstance) => {
-                  polylineInstance.setOptions(PolylineOptions);
-
-                  setDistancePolylines((prevPolylines) => {
-                    const [polylinesWithoutLast, lastPolyline] =
-                      dropAndReturnLastElement(prevPolylines);
-
-                    return [
-                      ...polylinesWithoutLast,
-                      { ...lastPolyline, polylineInstance },
-                    ];
-                  });
-
-                  const { coordinates } = polyline;
-
-                  handleSetLineDistanceCardData({
-                    coordinates,
-                    id: polyline.id,
-                  });
-                }}
-                onMouseUp={(event) => {
-                  const { polylineInstance } = polyline;
-
-                  if (polylineInstance) {
-                    const coordinateFuncs: google.maps.LatLng[] =
-                      polylineInstance.getPath().getArray();
-
-                    const currentCoordinates =
-                      coordinateFuncsToCoordinates(coordinateFuncs);
-
-                    const {
-                      isClickedOnEdgeOrVertex,
-                      vertexWithChangedCoordinates,
-                    } = processOnVertexOrEdgeClick({
-                      event,
-                      currentCoordinates,
-                      prevCoordinates: polyline.coordinates,
-                    });
-
-                    if (isClickedOnEdgeOrVertex) {
-                      setDistancePolylines((prevPolylines) => {
-                        const [polylinesWithoutCurrent] =
-                          dropAndReturnElementById({
-                            id: polyline.id,
-                            elements: prevPolylines,
-                          });
-
-                        if (vertexWithChangedCoordinates) {
-                          handleSetLineDistanceCardData({
-                            id: polyline.id,
-                            coordinates: currentCoordinates,
-                          });
-
-                          return R.append(
-                            {
-                              ...polyline,
-                              coordinates: currentCoordinates,
-                            },
-                            polylinesWithoutCurrent
-                          );
-                        }
-
-                        return prevPolylines;
-                      });
-                    } else if (
-                      !lineDistanceCardData &&
-                      !vertexWithChangedCoordinates
-                    ) {
-                      handleSetLineDistanceCardData({
-                        id: polyline.id,
-                        coordinates: currentCoordinates,
-                      });
-                    }
-                  }
-                }}
-                onDragStart={() => {
-                  setLineDistanceCardData(null);
-                }}
-                onDragEnd={() => {
-                  const { polylineInstance } = polyline;
-
-                  if (polylineInstance) {
-                    const coordinateFuncs: google.maps.LatLng[] =
-                      polylineInstance.getPath().getArray();
-                    const coordinates =
-                      coordinateFuncsToCoordinates(coordinateFuncs);
-
-                    setDistancePolylines((prevPolylines) => {
-                      const [polylinesWithoutCurrent] =
-                        dropAndReturnElementById({
-                          id: polyline.id,
-                          elements: prevPolylines,
-                        });
-
-                      handleSetLineDistanceCardData({
-                        coordinates,
-                        id: polyline.id,
-                      });
-
                       return R.append(
                         {
-                          ...polyline,
-                          coordinates,
+                          ...polygon,
+                          coordinates: currentCoordinates,
+                          prevCoordinates: polygon.coordinates,
                         },
-                        polylinesWithoutCurrent
+                        polygonsWithoutCurrent
                       );
                     });
+                  } else if (
+                    !polygonCardData &&
+                    !vertexWithChangedCoordinates &&
+                    !isClickOutsideDisabled
+                  ) {
+                    handleSetPolygonCardLatLng(polygon);
                   }
-                }}
-              />
-            ))}
+                }
+              }}
+              onDragStart={() => {
+                setUndoData(null);
+                setPolygonCardData(null);
+              }}
+              onDragEnd={() => {
+                const { polygonInstance } = polygon;
+
+                if (polygonInstance) {
+                  const coordinateFuncs: google.maps.LatLng[] = polygonInstance
+                    .getPath()
+                    .getArray();
+
+                  const coordinates =
+                    coordinateFuncsToCoordinates(coordinateFuncs);
+
+                  setPolygons((prevPolygons) => {
+                    const [polygonsWithoutCurrent] = dropAndReturnElementById({
+                      id: polygon.id,
+                      elements: prevPolygons,
+                    });
+
+                    const draggedPolygon = {
+                      ...polygon,
+                      coordinates,
+                      prevCoordinates: [],
+                    };
+
+                    handleSetPolygonCardLatLng(draggedPolygon);
+
+                    return R.append(draggedPolygon, polygonsWithoutCurrent);
+                  });
+                }
+              }}
+            />
+          ))}
+
+          {circles.map((circle) => (
+            <Circle
+              editable
+              key={circle.id}
+              center={circle.center}
+              radius={circle.radius}
+              onLoad={(circleInstance) => {
+                circleInstance.setOptions(CircleOptions);
+
+                setCircles((prevCircles) => {
+                  const [circlesWithoutLast, lastCircle] =
+                    dropAndReturnLastElement(prevCircles);
+
+                  return [
+                    ...circlesWithoutLast,
+                    { ...lastCircle, circleInstance },
+                  ];
+                });
+              }}
+              onRadiusChanged={() => {
+                handleSetCircleDataOnCoordinatesChange(circle);
+              }}
+              onCenterChanged={() => {
+                handleSetCircleDataOnCoordinatesChange(circle);
+              }}
+            />
+          ))}
+
+          {distancePolylines.map((polyline) => (
+            <Polyline
+              editable
+              draggable
+              key={polyline.id}
+              path={polyline.coordinates}
+              onLoad={(polylineInstance) => {
+                polylineInstance.setOptions(PolylineOptions);
+
+                setDistancePolylines((prevPolylines) => {
+                  const [polylinesWithoutLast, lastPolyline] =
+                    dropAndReturnLastElement(prevPolylines);
+
+                  return [
+                    ...polylinesWithoutLast,
+                    { ...lastPolyline, polylineInstance },
+                  ];
+                });
+              }}
+              onMouseUp={(event) => {
+                const { polylineInstance } = polyline;
+
+                if (polylineInstance) {
+                  const coordinateFuncs: google.maps.LatLng[] = polylineInstance
+                    .getPath()
+                    .getArray();
+
+                  const currentCoordinates =
+                    coordinateFuncsToCoordinates(coordinateFuncs);
+
+                  const {
+                    isClickedOnEdgeOrVertex,
+                    vertexWithChangedCoordinates,
+                  } = processOnVertexOrEdgeClick({
+                    event,
+                    currentCoordinates,
+                    prevCoordinates: polyline.coordinates,
+                  });
+
+                  if (isClickedOnEdgeOrVertex && vertexWithChangedCoordinates) {
+                    handleChangePolylineCoordinates({
+                      id: polyline.id,
+                      coordinates: currentCoordinates,
+                    });
+                  }
+                }
+              }}
+              onDragEnd={() => {
+                const { polylineInstance } = polyline;
+
+                if (polylineInstance) {
+                  const coordinateFuncs: google.maps.LatLng[] = polylineInstance
+                    .getPath()
+                    .getArray();
+
+                  const currentCoordinates =
+                    coordinateFuncsToCoordinates(coordinateFuncs);
+
+                  handleChangePolylineCoordinates({
+                    id: polyline.id,
+                    coordinates: currentCoordinates,
+                  });
+                }
+              }}
+            />
+          ))}
 
           {undoData && (
             <InfoWindow
@@ -775,115 +669,6 @@ export const Map = forwardRef<MapRef, MapProps>(
 
                     setPolygonCardData(null);
                   }}
-                />
-              </OutsideClickHandler>
-            </InfoWindow>
-          )}
-
-          {circleCardData && (
-            <InfoWindow
-              position={getCircleCardCoordinates({
-                center: circleCardData.center,
-                radius: circleCardData.radius,
-              })}
-              options={{
-                pixelOffset: new window.google.maps.Size(
-                  InfoWindowOptions.Circle.CardPixelOffset.X,
-                  InfoWindowOptions.Circle.CardPixelOffset.Y
-                ),
-              }}
-            >
-              <OutsideClickHandler
-                onOutsideClick={() => {
-                  setCircleCardData(null);
-                }}
-                disabled={isClickOutsideDisabled}
-              >
-                <CircleCard
-                  onDelete={() => {
-                    setCircleCardData(null);
-                    setCircles((prevCircles) => {
-                      const [circlesWithoutCurrent] = dropAndReturnElementById({
-                        id: circleCardData.id,
-                        elements: prevCircles,
-                      });
-
-                      return circlesWithoutCurrent;
-                    });
-                  }}
-                  radius={Math.round(circleCardData.radius)}
-                />
-              </OutsideClickHandler>
-            </InfoWindow>
-          )}
-
-          {lineDistanceCardData && (
-            <InfoWindow
-              position={{
-                lat: lineDistanceCardData.lat,
-                lng: lineDistanceCardData.lng,
-              }}
-              options={{
-                pixelOffset: new window.google.maps.Size(
-                  InfoWindowOptions.LineDistance.CardPixelOffset.X,
-                  InfoWindowOptions.LineDistance.CardPixelOffset.Y(
-                    Boolean(lineDistanceCardData.trajectory)
-                  )
-                ),
-              }}
-            >
-              <OutsideClickHandler
-                onOutsideClick={() => {
-                  setLineDistanceCardData(null);
-                }}
-                disabled={isClickOutsideDisabled}
-              >
-                <PolylineDistanceCard
-                  isMultiline={lineDistanceCardData.isMultiLine}
-                  onDelete={() => {
-                    setLineDistanceCardData(null);
-                    setDistancePolylines((prevPolylines) => {
-                      const [polylinesWithoutCurrent] =
-                        dropAndReturnElementById({
-                          id: lineDistanceCardData.id,
-                          elements: prevPolylines,
-                        });
-
-                      return polylinesWithoutCurrent;
-                    });
-                  }}
-                  onRemoveNodes={() => {
-                    setDistancePolylines((prevPolylines) => {
-                      const [polylinesWithoutCurrent, currentPolyline] =
-                        dropAndReturnElementById({
-                          id: lineDistanceCardData.id,
-                          elements: prevPolylines,
-                        });
-
-                      const { origin, destination } = getLineExtremeCoordinates(
-                        currentPolyline.coordinates
-                      );
-
-                      return [
-                        ...polylinesWithoutCurrent,
-                        {
-                          ...currentPolyline,
-                          coordinates: [origin, destination],
-                        },
-                      ];
-                    });
-
-                    setLineDistanceCardData((prev) =>
-                      prev
-                        ? { ...prev, trajectory: null, isMultiLine: false }
-                        : prev
-                    );
-                  }}
-                  distance={getDistanceWithUnits(lineDistanceCardData.distance)}
-                  trajectory={
-                    lineDistanceCardData.trajectory &&
-                    getDistanceWithUnits(lineDistanceCardData.trajectory)
-                  }
                 />
               </OutsideClickHandler>
             </InfoWindow>
